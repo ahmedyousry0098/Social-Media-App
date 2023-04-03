@@ -1,6 +1,5 @@
 import joi from 'joi'
 import mongoose from 'mongoose'
-import { ResponseError } from '../utils/ErrorHandling.js'
 
 export const GENERAL_FIELDS = {
     Id: joi.string().custom((value, helper) => {
@@ -23,6 +22,7 @@ export const GENERAL_FIELDS = {
         size: joi.number().positive().required(),
         dest: joi.string()
     }),
+    files: joi.array().items(),
     postTitle: joi.string().regex(/^[A-Za-z0-9_-]{5,500}$/),
     postContent: joi.string().regex(/^[A-Za-z0-9_-]{5,5000}$/),
     CommentContent: joi.string().regex(/^[A-Za-z0-9_-]{1,500}$/),
@@ -31,8 +31,8 @@ export const GENERAL_FIELDS = {
 export const isValid = (schema={}) => {
     return (req, res, next) => {
         const keys = {...req.body, ...req.params, ...req.query}
-        if (req.file) {
-            keys.file = req.file
+        if (req.file || req.files) {
+            keys.file = req.file || req.files
         }
         const result = schema.validate(keys, {abortEarly: false})
         if (result?.error?.details) {

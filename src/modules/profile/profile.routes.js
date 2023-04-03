@@ -27,7 +27,7 @@ router.get('/get-all-users', isAuthenticated, isAdmin, asyncHandler(getAllUsers)
 router.post('/forget-password', isValid(forgetPasswordSchema), asyncHandler(forgetPassword))
 router.patch('/reset-password', isValid(resetPasswordSchema), asyncHandler(resetPassword))
 router.patch('/:profileId/change-password', isValid(changePasswordSchema), isAuthenticated, asyncHandler(changePassword))
-router.patch('/:profileId/update', isValid(updateProfileSchema), isAuthenticated, asyncHandler(updateProfile))
+router.put('/:profileId/update', isValid(updateProfileSchema), isAuthenticated, asyncHandler(updateProfile))
 router.post(
     '/:profileId/change-profile-pic', 
     isAuthenticated,

@@ -18,7 +18,7 @@ router.post(
     isValid(createPostSchema), 
     asyncHandler(createPost)
 )
-router.patch(
+router.put(
     '/:postId/update', 
     isAuthenticated, 
     uploadFile({validationSchema: validation.image}).single('image'), 
@@ -33,7 +33,7 @@ router.patch('/:postId/delete', isValid(postIdSchema), isAuthenticated, asyncHan
 router.post('/:postId/add-comment', isValid(createCommentSchema), isAuthenticated, asyncHandler(addComment))
 router.patch('/:postId/like-comment/:commetId', isValid(commentIdSchema), isAuthenticated, asyncHandler(likeComment))
 router.patch('/:postId/unlike-comment/:commetId', isValid(commentIdSchema), isAuthenticated, asyncHandler(unlikeComment))
-router.patch('/:postId/update-comment/:commetId', isValid(updateCommentSchema), isAuthenticated, asyncHandler(unlikeComment))
+router.put('/:postId/update-comment/:commetId', isValid(updateCommentSchema), isAuthenticated, asyncHandler(unlikeComment))
 router.patch('/:postId/delete-comment/:commentId', isValid(deleteCommentSchema), isAuthenticated, asyncHandler(deletePost))
 
 export default router
