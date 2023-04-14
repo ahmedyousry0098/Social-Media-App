@@ -33,7 +33,7 @@ export const resetPassword = async (req, res, next) => {
     const user = await UserModel.findOne({verificationCode: code, email})
     if (!user) return next(new ResponseError(generalMsgs.NOT_FOUND, 404))
     user.password = password
-    user.verificationCode = "" // Try using save to apply hash password hook, and avoiding make additional request on data base $unset: {validationCode: 1}
+    user.verificationCode = undefined
     if (!await user.save()) return next(new ResponseError(generalMsgs.SERVER_ERROR, 500))
     return res.status(202).json({message: 'Password Changed Successfully'})
 }

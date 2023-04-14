@@ -7,6 +7,11 @@ const postSchema = new Schema({
     createdBy: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
     like: [{type: mongoose.Types.ObjectId, ref: 'User'}],
     unlike: [{type: mongoose.Types.ObjectId, ref: 'User'}],
+    status: {
+        type: String,
+        enum: ['only-me', 'public', 'only-friends'],
+        default: 'public'
+    },
     isDeleted: {type: Boolean, default: false},
 }, {
     timestamps: true,

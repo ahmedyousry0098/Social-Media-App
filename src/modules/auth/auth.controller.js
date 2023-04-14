@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import {sendEmail} from '../../utils/sendEmail.js'
 import {confirmEmailTamp} from '../../utils/templates/confirmEmail.js'
 import { ResponseError, generalMsgs } from '../../utils/ErrorHandling.js'
+import { resetPasswordTemp } from '../../utils/templates/resetPasswordEmail.js'
 
 export const register = async (req, res, next) => {
     const {firstName, lastName, email, password, role} = req.body
@@ -43,4 +44,30 @@ export const logIn = async (req, res, next) => {
     if (!logIn) return next(new ResponseError(generalMsgs.SERVER_ERROR, 500))
     const token = jwt.sign({id: user._id, email: user.email}, process.env.TOKEN_SIGNATURE, {expiresIn: 60*60})
     return res.status(200).json({message: 'Logged In Successfully', token})
+}
+
+export const forgetPassword = async (req, res, next) => {
+    const {email} = req.body;
+    const user = await UserModel.findOne({email})
+    if (!user) return next(new ResponseError('User Not Found', 400))
+    const verificationCode = nanoid(4)
+    user.verificationCode = verificationCode
+    if (!user.save()) return next(new ResponseError(generalMsgs.SERVER_ERROR, 500))
+    const emailInfo = await sendEmail({
+        to: email, 
+        subject: 'verification Code',
+        html: resetPasswordTemp({verificationCode})
+    })
+    if (!emailInfo.accepted.length) return next(new ResponseError('Cannot Send Email', 503))
+    return res.status(200).json({message: 'Check Out your email and use verification code to reset your password'})
+}
+
+export const resetPassword = async (req, res, next) => {
+    const {email, code, password} = req.body
+    const user = await UserModel.findOne({verificationCode: code, email})
+    if (!user) return next(new ResponseError(generalMsgs.NOT_FOUND, 404))
+    user.password = password
+    user.verificationCode = undefined
+    if (!await user.save()) return next(new ResponseError(generalMsgs.SERVER_ERROR, 500))
+    return res.status(202).json({message: 'Password Changed Successfully'})
 }

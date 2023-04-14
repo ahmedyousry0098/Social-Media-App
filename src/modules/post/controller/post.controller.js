@@ -97,15 +97,15 @@ export const getUserPosts = async (req, res, next) => {
     const cursor = PostModel.find({createdBy: _id, isDeleted: false}).populate([
         {
             path: 'createdBy',
-            select: 'fullName _id',
+            select: 'firstName lastName _id',
         }, 
         {
             path: 'like',
-            select: 'fullName _id'
+            select: 'firstName lastName _id'
         }, 
         {
             path: 'unlike',
-            selece: 'fullName _id'
+            selece: 'firstName lastName _id'
         }
     ]).limit(limit).skip(skip).cursor()
     let postsList = []
@@ -119,18 +119,18 @@ export const getUserPosts = async (req, res, next) => {
 export const getTimelinePosts = async (req, res, next) => {
     const {page} = req.query
     const {limit, skip} = pagination({page})
-    const cursor = PostModel.find({isDeleted: false}).populate([
+    const cursor = PostModel.find({isDeleted: false, status: {$ne: 'only-me'}}).populate([
         {
             path: 'createdBy',
-            select: 'fullName _id',
+            select: 'firstName lastName _id',
         }, 
         {
             path: 'like',
-            select: 'fullName _id'
+            select: 'firstName lastName _id',
         }, 
         {
             path: 'unlike',
-            selece: 'fullName _id'
+            selece: 'firstName lastName _id',
         }
     ]).limit(limit).skip(skip).cursor()
     let postsList = []
