@@ -1,8 +1,5 @@
 import {Router} from 'express'
 import { 
-    getAllUsers, 
-    forgetPassword, 
-    resetPassword, 
     changePassword, 
     updateProfile, 
     changeProfilePic, 
@@ -10,8 +7,6 @@ import {
     logOut,
 } from './profile.controller.js'
 import {
-    forgetPasswordSchema, 
-    resetPasswordSchema, 
     changePasswordSchema, 
     updateProfileSchema,
     pictrueSchema
@@ -23,9 +18,6 @@ import { uploadFile, validation } from '../../utils/uploadFile.js'
 
 const router = Router()
 
-router.get('/get-all-users', isAuthenticated, isAdmin, asyncHandler(getAllUsers))
-router.post('/forget-password', isValid(forgetPasswordSchema), asyncHandler(forgetPassword))
-router.patch('/reset-password', isValid(resetPasswordSchema), asyncHandler(resetPassword))
 router.patch('/:profileId/change-password', isValid(changePasswordSchema), isAuthenticated, asyncHandler(changePassword))
 router.put('/:profileId/update', isValid(updateProfileSchema), isAuthenticated, asyncHandler(updateProfile))
 router.post(
