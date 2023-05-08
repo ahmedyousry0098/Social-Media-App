@@ -14,7 +14,15 @@ const postSchema = new Schema({
     },
     isDeleted: {type: Boolean, default: false},
 }, {
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
     timestamps: true,
+})
+
+postSchema.virtual('comments', {
+    ref: 'Comment',
+    foreignField: 'createdOn',
+    localField: "_id",
 })
 
 const PostModel = mongoose.model('Post', postSchema)

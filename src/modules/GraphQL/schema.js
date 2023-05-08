@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql'
-import UserModel from '../../../DB/models/user.model.js'
 import { getAllUsers, getUserProfile } from '../profile/GraphQL/fields.js'
+import { getMyPosts, getTimelinePosts, getUserPosts } from '../post/GraphQL/field.js'
 
 export const rootSchema = new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -8,7 +8,10 @@ export const rootSchema = new GraphQLSchema({
         description: '',
         fields: {
             userProfile: getUserProfile,
-            users: getAllUsers
+            users: getAllUsers,
+            posts: getTimelinePosts,
+            myPosts: getMyPosts,
+            userPosts: getUserPosts
         }
     })
 })

@@ -1,6 +1,6 @@
-import PostModel from '../../../../DB/models/post.model.js'
-import CommentModel from '../../../../DB/models/comment.model.js'
-import { generalMsgs, ResponseError } from '../../../utils/ErrorHandling.js'
+import PostModel from '../../../DB/models/post.model.js'
+import CommentModel from '../../../DB/models/comment.model.js'
+import { generalMsgs, ResponseError } from '../../utils/ErrorHandling.js'
 
 export const addComment = async (req, res, next) => {
     const {content} = req.body
@@ -45,7 +45,7 @@ export const updateComment = async (req, res, next) => {
     const {postId, commentId} = req.params
     const {_id} = req.user
     const {content} = req.body
-    const comment = await findOneAndUpdate(
+    const comment = await CommentModel.findOneAndUpdate(
         {
             _id: commentId,
             createdOn: postId,
@@ -67,7 +67,7 @@ export const deleteComment = async (req, res, next) => {
             createdOn: postId,
             createdBy: _id
         },
-        {isDeleted: false},
+        {isDeleted: true},
         {new: true}
     )
     if (!comment) return next(new ResponseError(generalMsgs.NOT_FOUND, 400))

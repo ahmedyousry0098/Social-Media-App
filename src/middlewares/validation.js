@@ -23,13 +23,14 @@ export const GENERAL_FIELDS = {
         dest: joi.string()
     }),
     files: joi.array().items(),
-    postTitle: joi.string().regex(/^[A-Za-z0-9_-]{5,500}$/),
-    postContent: joi.string().regex(/^[A-Za-z0-9_-]{5,5000}$/),
-    CommentContent: joi.string().regex(/^[A-Za-z0-9_-]{1,500}$/),
+    postTitle: joi.string().regex(/^[ A-Za-z0-9_-]{5,1000}$/),
+    postContent: joi.string().regex(/^[ A-Za-z0-9_-]{5,5000}$/),
+    CommentContent: joi.string().regex(/^[ A-Za-z0-9_-]{1,500}$/),
 }
 
 export const isValid = (schema={}) => {
     return (req, res, next) => {
+        console.log(req.params);
         const keys = {...req.body, ...req.params, ...req.query}
         if (req.file || req.files) {
             keys.file = req.file || req.files
