@@ -7,8 +7,10 @@ import authRouter from './src/modules/auth/auth.routes.js'
 import profileRouter from './src/modules/profile/profile.routes.js'
 import postRouter from './src/modules/post/post.routes.js'
 import { connectDB } from './DB/connectDB.js'
-import {config} from 'dotenv'
 import { globalErrorHandling } from './src/utils/ErrorHandling.js'
+import { graphqlHTTP } from 'express-graphql'
+import {config} from 'dotenv'
+import { rootSchema } from './src/modules/GraphQL/schema.js'
 config({path: './config/.env'})
 
 const app = express()
@@ -19,6 +21,11 @@ connectDB()
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
+
+app.use('/graphql', graphqlHTTP({
+    schema: rootSchema,
+    graphiql: true
+}))
 
 app.use(`${baseURL}/`, authRouter)
 app.use(`${baseURL}/profile`, profileRouter)

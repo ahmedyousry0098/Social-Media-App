@@ -5,37 +5,11 @@ import cloudinary from '../../utils/cloudinary.js'
 import { ResponseError, generalMsgs } from '../../utils/ErrorHandling.js'
 import { nanoid } from 'nanoid'
 
-export const getAllUsers = async (req, res, next) => {
+export const getAllUsers = async (req, res, next) => { // graph
     const users = await UserModel.find({isDeleted: false})
     if (!users.length) return res.status(200).json({message: 'No Users has registers yet'})
     if (!users) return next(new ResponseError(generalMsgs.SERVER_ERROR, 500))
     return res.status(200).json({message: 'Done', users})
-}
-
-export const forgetPassword = async (req, res, next) => {
-    const {email} = req.body;
-    const user = await UserModel.findOne({email})
-    if (!user) return next(new ResponseError('User Not Found', 400))
-    const verificationCode = nanoid(4)
-    user.verificationCode = verificationCode
-    if (!user.save()) return next(new ResponseError(generalMsgs.SERVER_ERROR, 500))
-    const emailInfo = await sendEmail({
-        to: email, 
-        subject: 'verification Code',
-        html: resetPasswordTemp({verificationCode})
-    })
-    if (!emailInfo.accepted.length) return next(new ResponseError('Cannot Send Email', 503))
-    return res.status(200).json({message: 'Check Out your email and use verification code to reset your password'})
-}
-
-export const resetPassword = async (req, res, next) => {
-    const {email, code, password} = req.body
-    const user = await UserModel.findOne({verificationCode: code, email})
-    if (!user) return next(new ResponseError(generalMsgs.NOT_FOUND, 404))
-    user.password = password
-    user.verificationCode = undefined
-    if (!await user.save()) return next(new ResponseError(generalMsgs.SERVER_ERROR, 500))
-    return res.status(202).json({message: 'Password Changed Successfully'})
 }
 
 export const changePassword = async (req, res, next) => {

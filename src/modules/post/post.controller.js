@@ -1,8 +1,8 @@
-import PostModel from '../../../../DB/models/post.model.js'
-import { generalMsgs, ResponseError } from '../../../utils/ErrorHandling.js'
-import cloudinary from '../../../utils/cloudinary.js'
-import CommentModel from '../../../../DB/models/comment.model.js'
-import { pagination } from '../../../utils/pagination.js'
+import PostModel from '../../../DB/models/post.model.js'
+import { generalMsgs, ResponseError } from '../../utils/ErrorHandling.js'
+import cloudinary from '../../utils/cloudinary.js'
+import CommentModel from '../../../DB/models/comment.model.js'
+import { pagination } from '../../utils/pagination.js'
 
 export const createPost = async (req, res, next) => {
     const {title, content} = req.body

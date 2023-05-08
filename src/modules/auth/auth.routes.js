@@ -1,9 +1,9 @@
 import {Router} from 'express'
-import { register, confirmEmail, logIn } from './auth.controller.js'
-import { registerSchema, loginSchema } from './auth.validation.js'
+import { register, confirmEmail, logIn, forgetPassword } from './auth.controller.js'
+import { registerSchema, loginSchema, forgetPasswordSchema, resetPasswordSchema } from './auth.validation.js'
 import { asyncHandler } from '../../utils/ErrorHandling.js'
 import { isValid } from '../../middlewares/validation.js'
-import { forgetPasswordSchema, resetPasswordSchema } from '../profile/profile.validation.js'
+import { resetPassword } from './auth.controller.js'
 
 const router = Router()
 
